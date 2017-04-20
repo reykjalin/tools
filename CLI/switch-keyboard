@@ -1,0 +1,14 @@
+#!/bin/bash
+LAYOUT=$(setxkbmap -query | grep layout | cut -d' ' -f6 | cut -d',' -f1)
+
+case $LAYOUT in
+    us)
+        setxkbmap -layout is,us
+        ;;
+    is)
+        setxkbmap -layout us,is
+        ;;
+    *)
+        echo "unknown layout"
+        ;;
+esac

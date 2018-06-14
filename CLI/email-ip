@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-echo "My current IP address is $(dig +short myip.opendns.com @resolver1.opendns.com)" | mail -s "Current IP address" kristoferrt@gmail.com
+echo "My current IP address is $(dig +short myip.opendns.com @resolver1.opendns.com)" | mail -s "Current IP address" "$1"

@@ -1,0 +1,61 @@
+#!/usr/bin/env sh
+set -e # Exit on error
+
+ENVS=$V_ENVS
+CWD=$(echo $PWD | awk -F/ '{print $NF}')
+
+function usage() {
+  echo "$0 [rm]"
+  echo
+  echo "    rm        Delete the virtualenvironment for the current directory"
+  echo "    -h        Show this message"
+}
+
+function remove() {
+  if [[ -d "$ENVS"/"$CWD" ]]; then
+    echo Deleting \""$ENVS"/"$CWD"\"...
+    rm -rf "$ENVS"/"$CWD"
+    echo Done.
+  else
+    echo Virtualenvironment has not been initialized.
+    exit 1
+  fi
+}
+
+function create() {
+  if [[ ! -d "$ENVS" ]]; then
+    echo Creating \""$ENVS"\" to store environments...
+    mkdir -p "$ENVS"
+    echo Done.
+  fi
+
+  if [[ ! -d "$ENVS"/"$CWD" ]]; then
+    echo Creating virtualenvironment in \""$ENVS"/"$CWD"\"...
+    python3 -m venv "$ENVS"/"$CWD"
+    echo Done.
+  fi
+}
+
+function activate() {
+  echo Activating virtualenvironment and starting new shell...
+  . "$ENVS"/"$CWD"/bin/activate
+  $SHELL
+  echo Closing virtualenvironment...
+}
+
+if [[ "$ENVS" = "" ]]; then
+  ENVS="$HOME"/.config/v
+fi
+
+case "$1" in
+  -h|--help)
+    usage
+    ;;
+  "rm")
+    remove
+    ;;
+  *)
+    create
+    activate
+    ;;
+esac

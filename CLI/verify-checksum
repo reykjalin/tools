@@ -1,0 +1,41 @@
+#!/usr/bin/python2.7
+
+import hashlib
+import sys
+
+usage = '''
+./verify-checksum algorithm file provided_checksum
+
+algorithm            Checksum algorithm, e.g. sha1, sha256, md5.
+file                 Path to file that needs verification.
+provided_checksum    The checksum provided with the file.
+'''
+
+def help():
+    if len( sys.argv ) != 4:
+        print( usage )
+        print( 'printing message' )
+        sys.exit( 1 )
+
+def read_file( path ):
+    with open( path ) as fp:
+        return fp.read()
+
+def main():
+    help()
+
+    if 'sha1' == sys.argv[1]:
+        hasher = hashlib.sha1()
+        hasher.update( read_file( sys.argv[2] ) )
+    else:
+        print( 'Unsupported hash' )
+        sys.exit( 1 )
+
+    file_hash = hasher.hexdigest()
+    provided_hash = sys.argv[ 3 ]
+    print( 'hash: ' + file_hash )
+    print( 'provided hash: ' + provided_hash )
+    print( 'Hash is ' + ( 'valid' if file_hash == provided_hash else 'invalid' ) )
+
+if __name__ == '__main__':
+    main()
